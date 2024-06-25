@@ -1,0 +1,5 @@
+../Core/Src/sio.c:63:16:sio_uart_rxRec	0	static
+../Core/Src/sio.c:237:12:sio_RxIntS0	16	static
+../Core/Src/sio.c:226:13:sio_init	8	static
+../Core/Src/sio.c:174:13:sio_task	48	static
+../Core/Src/sio.c:254:6:HAL_UART_TxCpltCallback	0	static

@@ -1,0 +1,6 @@
+../Ext_ADC_Lib/ads8344.c:53:13:B_SCK	8	static
+../Ext_ADC_Lib/ads8344.c:48:13:B_DOUT	8	static
+../Ext_ADC_Lib/ads8344.c:235:6:ads_stop	8	static
+../Ext_ADC_Lib/ads8344.c:247:6:ads_start	8	static
+../Ext_ADC_Lib/ads8344.c:179:17:ads_MeasDigit	32	static,ignoring_inline_asm
+../Ext_ADC_Lib/ads8344.c:202:11:ani_Mess	32	static
