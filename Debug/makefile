@@ -53,6 +53,12 @@ default.size.stdout \
 OBJDUMP_LIST += \
 EVC_Analog_input_prj.list \
 
+OBJCOPY_HEX += \
+EVC_Analog_input_prj.hex \
+
+OBJCOPY_BIN += \
+EVC_Analog_input_prj.bin \
+
 
 # All Target
 all: main-build
@@ -76,12 +82,22 @@ EVC_Analog_input_prj.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_
 	@echo 'Finished building: $@'
 	@echo ' '
 
+EVC_Analog_input_prj.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "EVC_Analog_input_prj.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
+EVC_Analog_input_prj.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "EVC_Analog_input_prj.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) EVC_Analog_input_prj.elf EVC_Analog_input_prj.list EVC_Analog_input_prj.map default.size.stdout
+	-$(RM) EVC_Analog_input_prj.bin EVC_Analog_input_prj.elf EVC_Analog_input_prj.hex EVC_Analog_input_prj.list EVC_Analog_input_prj.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'

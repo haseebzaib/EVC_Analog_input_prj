@@ -46,7 +46,7 @@
 LOCAL uint8_t *pRx; //Pointer to examine RX buffer
 GLOBAL uint8_t S0TxBuf[120]; /* Send buffer to EVC*/
 GLOBAL uint8_t S0RxBuf[50]; /* Receieve buffer from EVC */
-uint8_t opRq_buf[] = "senddata";
+uint8_t opRq_buf[] = "senddata\n";
 float ad_val[ANALOG_INP];
 uint8_t ad_buf[ANALOG_INP][25];
 char Tx_buffer[120];
@@ -129,12 +129,15 @@ LOCAL void sio_TxBlockStart(char *buf) {
  * we make request buffer here
  */
 LOCAL void sio_opRq() {
-	if (*pRx++ != '?')		// after / must ? come
-			{
-		return;
-	}
+//	if (*pRx++ != '?')		// after / must ? come
+//			{
+//		return;
+//	}
 
-	if (memcmp(pRx, opRq_buf, strlen((const char*) opRq_buf)) == 0) {
+//	*pRx++;
+//	*pRx++;
+//
+//	if (memcmp(pRx, opRq_buf, strlen((const char*) opRq_buf)) == 0) {
 
 		for (int i = 0; i < ANALOG_INP; i++) {
 
@@ -162,9 +165,9 @@ LOCAL void sio_opRq() {
 		sio_TxBlockStart(Tx_buffer);
 		util_check_UartEvent(2000);
 
-	} else {
-		return;
-	}
+//	} else {
+//		return;
+//	}
 
 }
 
@@ -174,20 +177,59 @@ LOCAL void sio_opRq() {
 GLOBAL void sio_task() {
 	sio_init();
 	sio_RxBlockStart();
-	util_check_UartEvent(15000);   //we wait here until we receive something
+	util_check_UartEvent(50000);   //we wait here until we receive something
 //	sio_TxBlockStart((char *)S0RxBuf);
 //	util_check_UartEvent(2000);
 
-	pRx = S0RxBuf;
+//	pRx = S0RxBuf;
+//
+//	switch (*pRx++) //for future more cases can be added if needed
+//	{
+//	case '/': //opening request
+//	{
+//		sio_opRq();
+//		break;
+//	}
+//	default: {
+//		//sio_opRq();
+//		HAL_UART_DeInit(&huart1);
+//		huart1.Instance = USART1;
+//		huart1.Init.BaudRate = 9600;
+//		huart1.Init.WordLength = UART_WORDLENGTH_8B;
+//		huart1.Init.StopBits = UART_STOPBITS_1;
+//		huart1.Init.Parity = UART_PARITY_NONE;
+//		huart1.Init.Mode = UART_MODE_TX_RX;
+//		huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+//		huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+//		huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+//		huart1.Init.ClockPrescaler = UART_PRESCALER_DIV1;
+//		huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+//		if (HAL_UART_Init(&huart1) != HAL_OK) {
+//			Error_Handler();
+//		}
+//		if (HAL_UARTEx_SetTxFifoThreshold(&huart1, UART_TXFIFO_THRESHOLD_1_8)
+//				!= HAL_OK) {
+//			Error_Handler();
+//		}
+//		if (HAL_UARTEx_SetRxFifoThreshold(&huart1, UART_RXFIFO_THRESHOLD_1_8)
+//				!= HAL_OK) {
+//			Error_Handler();
+//		}
+//		if (HAL_UARTEx_DisableFifoMode(&huart1) != HAL_OK) {
+//			Error_Handler();
+//		}
+//		break;
+//	}
+//	}
 
-	switch (*pRx++) //for future more cases can be added if needed
-	{
-	case '/': //opening request
+
+
+	if(strstr("/?senddata",(const char *)S0RxBuf))
 	{
 		sio_opRq();
-		break;
 	}
-	default: {
+	else
+	{
 		HAL_UART_DeInit(&huart1);
 		huart1.Instance = USART1;
 		huart1.Init.BaudRate = 9600;
@@ -214,8 +256,6 @@ GLOBAL void sio_task() {
 		if (HAL_UARTEx_DisableFifoMode(&huart1) != HAL_OK) {
 			Error_Handler();
 		}
-		break;
-	}
 	}
 
 }
